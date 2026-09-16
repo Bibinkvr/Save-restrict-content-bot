@@ -1,13 +1,13 @@
 """
-Save Restricted Content Bot Configuration
-
-Developed by: LastPerson07Xcantarella
-Telegram: @cantarellabots X @THEUPDATEDGUYS
-
-Please retain this credit if you use or modify this project.
+ContentSaver Bot Configuration
 """
 
 import os
+try:
+    from dotenv import load_dotenv
+    load_dotenv()
+except ImportError:
+    pass
 
 
 # ==============================
@@ -33,6 +33,18 @@ ADMINS = [int(admin) for admin in os.environ.get("ADMINS", "").split(",") if adm
 
 DB_URI = os.environ.get("DB_URI", "")
 DB_NAME = os.environ.get("DB_NAME", "SaveRestricted2")
+
+
+# ==============================
+# Force Subscribe (FSub 2.0)
+# ==============================
+
+# Comma-separated channel IDs/usernames (e.g. "@Channel1, -1001234567890")
+raw_fsub = os.environ.get("FSUB_CHANNELS", os.environ.get("FSUB_CHANNEL", ""))
+FSUB_CHANNELS = [ch.strip() for ch in raw_fsub.split(",") if ch.strip()]
+FSUB_CHANNEL = FSUB_CHANNELS[0] if FSUB_CHANNELS else ""
+# Auto-approve join requests automatically
+FSUB_AUTO_APPROVE = os.environ.get("FSUB_AUTO_APPROVE", "True").lower() == "true"
 
 
 # ==============================

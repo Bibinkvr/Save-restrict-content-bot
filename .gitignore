@@ -1,0 +1,35 @@
+# Environment Variables & Secrets
+.env
+.env.*
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Telegram Sessions
+*.session
+*.session-journal
+*.session-shm
+*.session-wal
+downloads/
+
+# Logs & Temporary Files
+*.log
+logs.txt
+*.tmp
+SaveRestricted.json
+scratch/
+
+# OS Specific
+.DS_Store
+Thumbs.db

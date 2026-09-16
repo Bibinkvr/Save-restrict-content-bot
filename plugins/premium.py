@@ -16,69 +16,83 @@ logger = LOGGER(__name__)
 # USER COMMANDS - Professional & Informative
 # ======================================================
 
-# /myplan - Detailed Plan & Quota Overview
-@Client.on_message(filters.command("myplan") & filters.private)
+# /myplan or /plan - Detailed Plan & Quota Overview
+@Client.on_message(filters.command(["myplan", "plan"]) & filters.private)
 async def my_plan(client: Client, message: Message):
     user_id = message.from_user.id
     
-    # 1. Ensure User Exists (Fixing the 'ensure_user' error manually)
+    # 1. Ensure User Exists
     if not await db.is_user_exist(user_id):
         await db.add_user(user_id, message.from_user.first_name)
 
     # 2. Fetch User Data Directly from DB
-    user_data = await db.col.find_one({'id': user_id})
+    user_data = await db.col.find_one({'id': user_id}) or {}
+    total_saves = user_data.get('total_saves', 0)
     
-    # Defaults
-    is_premium = user_data.get('is_premium', False)
-    expiry = user_data.get('premium_expiry')
-    daily_usage = user_data.get('daily_usage', 0)
-    # Note: total_saves needs to be tracked in your traffic logic to show up here
-    total_saves = user_data.get('total_saves', 0) 
+    is_admin = int(user_id) in ADMINS
 
     # 3. Generate Status Text
-    if is_premium:
-        # Premium Logic
-        if expiry:
-            try:
-                # Handle both date objects and ISO strings
-                if isinstance(expiry, (date, datetime)):
-                    exp_date = expiry
-                else:
-                    exp_date = date.fromisoformat(str(expiry))
-                
-                # Calculate days left
-                days_left = (exp_date - date.today()).days if isinstance(exp_date, date) else 999
-                expiry_text = f"<code>{expiry}</code> ({days_left} days left)"
-            except Exception:
-                expiry_text = "<code>Active</code>"
-        else:
-            expiry_text = "<code>Permanent</code>"
-
+    if is_admin:
         plan_text = (
-            f"<b>👑 Premium Status: Active</b>\n\n"
-            f"<b>📅 Expiry:</b> {expiry_text}\n\n"
+            f"<b>👑 Status: Bot Administrator / Owner</b>\n\n"
+            f"<b>💎 Premium:</b> Active\n"
+            f"<b>📅 Expiry:</b> <code>Permanent (Admin - No Expiry)</code>\n\n"
             f"<b>♾️ Daily Tokens:</b> Unlimited\n"
             f"<b>♾️ Batch Limit:</b> Unlimited\n"
+            f"<b>📦 File Size Limit:</b> Unlimited (4GB+)\n"
             f"<b>📊 Total Lifetime Saves:</b> <code>{total_saves}</code>\n\n"
-            "<i>Thank you for supporting the bot! 🎉</i>"
+            "<i>Full administrative privileges and permanent premium access. ⚡</i>"
         )
+        buttons = InlineKeyboardMarkup([
+            [InlineKeyboardButton("💬 Contact Support (@H4CK3R_OO7)", url="https://t.me/H4CK3R_OO7")]
+        ])
     else:
-        # Free Logic
-        daily_limit = 10
-        tokens_left = max(0, daily_limit - daily_usage)
-        
-        plan_text = (
-            f"<b>👤 Plan: Free Tier</b>\n\n"
-            f"<b>🎫 Daily Tokens:</b> <code>{tokens_left} / {daily_limit}</code>\n"
-            f"<b>📦 File Size Limit:</b> <code>2 GB</code>\n"
-            f"<b>📊 Total Lifetime Saves:</b> <code>{total_saves}</code>\n\n"
-            "<i>Upgrade to Premium for unlimited access! 🚀</i>"
-        )
+        is_premium = await db.check_premium(user_id)
+        if is_premium:
+            expiry = user_data.get('premium_expiry')
+            if expiry:
+                try:
+                    if isinstance(expiry, (date, datetime)):
+                        exp_date = expiry.date() if isinstance(expiry, datetime) else expiry
+                    else:
+                        exp_date = date.fromisoformat(str(expiry))
+                    
+                    days_left = (exp_date - date.today()).days
+                    expiry_text = f"<code>{expiry}</code> ({days_left} days left)"
+                except Exception:
+                    expiry_text = "<code>Active</code>"
+            else:
+                expiry_text = "<code>Active</code>"
 
-    buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("💎 View Premium Plans", callback_data="premium_plans_btn")],
-        [InlineKeyboardButton("📞 Contact Admin", url="https://t.me/about_zani")]
-    ])
+            plan_text = (
+                f"<b>👑 Premium Status: Active</b>\n\n"
+                f"<b>📅 Expiry:</b> {expiry_text}\n\n"
+                f"<b>♾️ Daily Tokens:</b> Unlimited\n"
+                f"<b>♾️ Batch Limit:</b> Unlimited\n"
+                f"<b>📦 File Size Limit:</b> 4GB+\n"
+                f"<b>📊 Total Lifetime Saves:</b> <code>{total_saves}</code>\n\n"
+                "<i>Thank you for supporting ContentSaver! 🎉</i>"
+            )
+            buttons = InlineKeyboardMarkup([
+                [InlineKeyboardButton("💎 View Premium Plans", callback_data="premium_plans_btn")],
+                [InlineKeyboardButton("💬 Contact Admin (@H4CK3R_OO7)", url="https://t.me/H4CK3R_OO7")]
+            ])
+        else:
+            daily_limit = 10
+            daily_usage = user_data.get('daily_usage', 0)
+            tokens_left = max(0, daily_limit - daily_usage)
+            
+            plan_text = (
+                f"<b>👤 Plan: Free Tier</b>\n\n"
+                f"<b>🎫 Daily Tokens:</b> <code>{tokens_left} / {daily_limit}</code>\n"
+                f"<b>📦 File Size Limit:</b> <code>2 GB</code>\n"
+                f"<b>📊 Total Lifetime Saves:</b> <code>{total_saves}</code>\n\n"
+                "<i>Upgrade to Premium for unlimited access! 🚀</i>"
+            )
+            buttons = InlineKeyboardMarkup([
+                [InlineKeyboardButton("💎 View Premium Plans", callback_data="premium_plans_btn")],
+                [InlineKeyboardButton("💬 Contact Admin (@H4CK3R_OO7)", url="https://t.me/H4CK3R_OO7")]
+            ])
 
     await message.reply_text(
         plan_text,
@@ -97,7 +111,7 @@ async def premium_info(client: Client, message: Message):
 
 async def show_premium_plans(message_or_query):
     text = (
-        "<b>💎Premium Plans</b>\n\n"
+        "<b>💎 Premium Plans</b>\n\n"
         "<blockquote>\n"
         "<b>Why Go Premium?</b>\n"
         "• ♾️ <b>Unlimited</b> Daily Saves\n"
@@ -106,14 +120,14 @@ async def show_premium_plans(message_or_query):
         "• 🖼 <b>Custom</b> Thumbnails & Captions\n"
         "• 👑 <b>Premium</b> Badge\n"
         "</blockquote>\n\n"
-        "<b>💲 Pricing:</b>\n"
-        "• <b>1 Month:</b> ₹50 / $1\n"
-        "• <b>Lifetime:</b> ₹200 / $4\n\n"
-        "<i>Tap the button below to buy instantly.</i>"
+        "<b>💲 Pricing Options:</b>\n"
+        "• <b>1 Month Plan:</b> ₹50 / $1\n"
+        "• <b>3 Months Plan:</b> ₹120 / $2.5\n\n"
+        "<i>Contact Admin to upgrade your account and activate premium instantly.</i>"
     )
 
     buttons = InlineKeyboardMarkup([
-        [InlineKeyboardButton("💳 Buy Premium Now", url="https://t.me/DmOwner")],
+        [InlineKeyboardButton("💬 Buy Premium (@H4CK3R_OO7)", url="https://t.me/H4CK3R_OO7")],
         [InlineKeyboardButton("⬅️ Back to My Plan", callback_data="myplan_back_btn")]
     ])
 

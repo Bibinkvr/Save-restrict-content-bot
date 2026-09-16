@@ -1,224 +1,144 @@
-# 🚀 Save Restricted Content Bot (Advanced)
+# 🚀 ContentSaver Bot (Save Restricted Content)
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.10+-blue?logo=python&style=for-the-badge">
-  <img src="https://img.shields.io/badge/Library-Pyrogram-yellow?logo=telegram&style=for-the-badge">
-  <img src="https://img.shields.io/badge/Database-MongoDB-green?logo=mongodb&style=for-the-badge">
-  <img src="https://img.shields.io/badge/Status-Stable-success?style=for-the-badge">
+  <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white&style=for-the-badge">
+  <img src="https://img.shields.io/badge/Pyrogram-v2.0-26A5E4?logo=telegram&logoColor=white&style=for-the-badge">
+  <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white&style=for-the-badge">
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white&style=for-the-badge">
+  <img src="https://img.shields.io/badge/License-MIT-red?style=for-the-badge">
 </p>
 
 <p align="center">
-<b>A cleaner and improved version of the Save Restricted Content Bot with a better structure, smoother workflow, and practical features for real usage.</b>
-</p>
-
-<p align="center">
-  <a href="https://github.com/abhinai2244/SAVE-RESTRICT-BOT">
-    <img src="https://img.shields.io/badge/View-Original%20Repository-black?style=for-the-badge&logo=github">
-  </a>
+  <b>High-performance, async Telegram bot to save media, files, and messages from public and private restricted channels. Packed with Multi-Channel ForceSub 2.0, Join-Request Auto-Approval, Video Fast-Streaming, Custom Captions, Thumbnails, Word Filters, and Dump Chat Forwarding.</b>
 </p>
 
 ---
 
-## 🔗 Quick Links
+## 🌟 Key Highlights
 
-<p align="center">
-  <a href="#-features"><img src="https://img.shields.io/badge/Features-View-blue?style=for-the-badge"></a>
-  <a href="#-deployment"><img src="https://img.shields.io/badge/Deployment-Setup-green?style=for-the-badge"></a>
-  <a href="#-commands"><img src="https://img.shields.io/badge/Commands-List-orange?style=for-the-badge"></a>
-  <a href="#-support"><img src="https://img.shields.io/badge/Support-Telegram-blue?style=for-the-badge&logo=telegram"></a>
-</p>
-
----
-
-# 🚀 Features
-
-<details open>
-<summary><b>📦 Core Features</b></summary>
-
-- **Save Restricted Content** — Download text, media, and files from restricted channels.
-- **Batch Mode** — Bulk download messages from public or private channels with auto-detection.
-- **User Login** — Login using `/login` to enable downloading capabilities.
-
-### ⚙️ Customization
-
-- Set custom captions (`/set_caption`)
-- Set custom thumbnails (`/set_thumb`)
-- Auto-delete or replace specific words
-
-### 💎 Premium System
-
-- Built-in system for free and premium users
-- Admin-controlled premium access
-
-### 👑 Admin Tools
-
-- Broadcast messages
-- Ban / Unban users
-- Manage premium status
-
-### 🧠 Persistent Storage
-
-- MongoDB-based user data and settings
-
-### ☁️ Keep Alive
-
-- Supports uptime services for Render / Heroku deployments
-
-</details>
+- ⚡ **High-Speed Async Engine:** Powered by Pyrogram Async with concurrent upload/download pipelines.
+- 🔓 **Restricted Channel Support:** Download protected media and documents seamlessly using authenticated session login.
+- 📦 **Batch Range Mode:** Save entire series of posts at once (e.g. `https://t.me/channel/100-150`).
+- 🎬 **Video Fast-Streaming:** All uploaded videos support instant streaming without waiting for complete downloads.
+- 📢 **Force Subscribe (FSub 2.0):** Multi-channel gate support with Request-to-Join links and automatic background approval.
+- ✍️ **Dynamic Captions & Thumbnails:** Custom placeholders (`{filename}`, `{size}`) and persistent custom thumbnail support.
+- ✂️ **Word Filters:** Automatic removal and replacement of unwanted spam words and channel links.
+- 📤 **Dump Chat Forwarding:** Automatically route saved media to your private backup channel or supergroup.
+- 💎 **Tiered Quota & Monetization:** Configurable Free tier (10 saves/day, 2GB cap) vs Premium tier (unlimited, 4GB+ support) with expiry tracking. Admins enjoy permanent exemption.
 
 ---
 
-# 🛠 Deployment
+## ⚙️ Configuration & Environment Variables
 
-## ✅ Prerequisites
-
-- Python **3.10+**
-- MongoDB Database
-- Telegram API ID & Hash
-- Bot Token
-
----
-
-## ⚙️ Environment Variables
-
-<details>
-<summary><b>Click to Expand</b></summary>
-
-| Variable        | Description                                |
-| --------------- | ------------------------------------------ |
-| `BOT_TOKEN`     | Telegram Bot Token from BotFather          |
-| `API_ID`        | Telegram API ID                            |
-| `API_HASH`      | Telegram API Hash                          |
-| `ADMINS`        | Comma-separated Admin User IDs             |
-| `DB_URI`        | MongoDB Connection String                  |
-| `DB_NAME`       | Database Name (default: `SaveRestricted2`) |
-| `LOG_CHANNEL`   | Channel ID for logging users and errors    |
-| `ERROR_MESSAGE` | Send error messages to users               |
-| `KEEP_ALIVE`    | Use an uptime service like UptimeRobot     |
-
-</details>
+| Variable | Required | Description | Default |
+| :--- | :---: | :--- | :--- |
+| `BOT_TOKEN` | **Yes** | Telegram Bot Token from [@BotFather](https://t.me/BotFather) | — |
+| `API_ID` | **Yes** | Telegram App API ID from [my.telegram.org](https://my.telegram.org) | — |
+| `API_HASH` | **Yes** | Telegram App API Hash from [my.telegram.org](https://my.telegram.org) | — |
+| `ADMINS` | **Yes** | Comma-separated Telegram User IDs of Bot Owners/Admins | — |
+| `DB_URI` | **Yes** | MongoDB Atlas Connection URI | — |
+| `DB_NAME` | No | MongoDB Database Name | `SaveRestricted2` |
+| `LOG_CHANNEL` | **Yes** | Channel ID for logging user signups and system events | — |
+| `FSUB_CHANNELS` | No | Comma-separated Channel IDs/Usernames for Force Subscribe | `""` |
+| `FSUB_AUTO_APPROVE`| No | Automatically approve incoming channel join requests | `True` |
+| `ERROR_MESSAGE` | No | Display user-facing error messages | `True` |
 
 ---
 
-## 💻 Local Setup
+## 🚀 Deployment Guide
 
-<details open>
-<summary><b>Installation Steps</b></summary>
-
-### Clone the repository
+### 1. Local / VPS Setup
 
 ```bash
-git clone https://github.com/abhinai2244/SAVE-RESTRICT-BOT.git
-cd save-restricted-content-bot
-```
+# Clone the repository
+git clone https://github.com/Bibinkvr/Save-restrict-content-bot.git
+cd Save-restrict-content-bot
 
-### Install dependencies
+# Create virtual environment
+python -m venv venv
+source venv/bin/activate  # On Windows: venv\Scripts\activate
 
-```bash
+# Install requirements
 pip install -r requirements.txt
-```
 
-### Run the bot
+# Configure environment
+cp .env.example .env  # Fill in your credentials
 
-```bash
+# Start the bot
 python bot.py
 ```
 
-</details>
-
----
-
-## 🐳 Docker
+### 2. Docker Deployment
 
 ```bash
-docker build -t save-restricted-bot .
-docker run -d --env-file .env save-restricted-bot
+docker build -t contentsaver-bot .
+docker run -d --name contentsaver --env-file .env contentsaver-bot
 ```
 
 ---
 
-# 📝 Commands
+## 📜 All Available Commands
 
-## 👤 User Commands
+### 👤 User Commands
 
-<details>
-<summary><b>Click to Expand</b></summary>
+| Command | Action |
+| :--- | :--- |
+| `/start` | Start/Restart the bot & view quota status |
+| `/help` | Detailed interactive guide & command list |
+| `/settings` | Open interactive settings dashboard |
+| `/commands` | Quick command index |
+| `/login` | Interactive phone + OTP login for restricted access |
+| `/logout` | Log out and disconnect active user session |
+| `/cancel` | Instantly abort current task or batch save |
+| `/myplan` / `/plan` | View plan details, daily tokens, and expiry |
+| `/premium` | View premium membership pricing and benefits |
 
-| Command     | Action                   |
-| ----------- | ------------------------ |
-| `/start`    | Start the bot            |
-| `/help`     | Get help information     |
-| `/login`    | Login to your account    |
-| `/logout`   | Logout from your account |
-| `/cancel`   | Cancel batch process     |
-| `/settings` | Open settings menu       |
-| `/myplan`   | Check your current plan  |
-| `/premium`  | View premium details     |
+### ⚙️ Customization & Filters
 
-### ⚙️ Customization
+| Command | Action |
+| :--- | :--- |
+| `/set_caption <text>` | Set custom caption (supports `{filename}` and `{size}`) |
+| `/see_caption` | Preview current custom caption |
+| `/del_caption` | Reset custom caption to default |
+| `/set_thumb` | Reply to any photo to set upload thumbnail |
+| `/view_thumb` | View current custom thumbnail |
+| `/del_thumb` | Delete custom thumbnail |
+| `/thumb_mode` | Check thumbnail mode status |
+| `/set_del_word <w1> <w2>` | Add words to automatic delete list |
+| `/rem_del_word <w1> <w2>` | Remove words from delete list |
+| `/set_repl_word <old> <new>` | Set word replacement rule |
+| `/rem_repl_word <old>` | Delete word replacement rule |
+| `/setchat <chat_id>` | Set dump chat for auto-forwarding |
+| `/setchat clear` | Remove dump chat forward destination |
 
-- `/set_caption`
-- `/see_caption`
-- `/del_caption`
-- `/set_thumb`
-- `/view_thumb`
-- `/del_thumb`
-- `/thumb_mode`
-- `/set_del_word`
-- `/rem_del_word`
-- `/set_repl_word`
-- `/rem_repl_word`
-- `/setchat`
+### 👑 Admin Commands (Owner Only)
 
-</details>
-
----
-
-## 👑 Admin Commands
-
-<details>
-<summary><b>Click to Expand</b></summary>
-
-- `/broadcast`
-- `/ban` / `/unban`
-- `/add_premium` / `/remove_premium`
-- `/users`
-- `/premium_users`
-- `/set_dump`
-- `/dblink`
-
-</details>
+| Command | Action |
+| :--- | :--- |
+| `/add_premium <id> <days>` | Grant premium subscription (`0` for permanent) |
+| `/remove_premium <id>` | Revoke premium subscription from user |
+| `/broadcast` | Reply to any message/media to broadcast to all users |
+| `/users` | View registered user analytics and export JSON |
+| `/ban <user_id>` | Ban a user from bot access |
+| `/unban <user_id>` | Unban a user |
+| `/set_dump <user_id> <chat_id>`| Configure dump chat for a user |
+| `/add_fsub <channel> [link]` | Add a channel to Multi-FSub gate |
+| `/del_fsub <channel>` / `all` | Remove specific or all FSub channels |
+| `/fsub` | View status of all active FSub channels |
+| `/auto_approve on/off` | Toggle Join-Request auto-approval |
 
 ---
 
-# 🤝 Contributors
+## 📞 Support & Admin Contact
 
 <p align="center">
-  <a href="https://t.me/cantarella_wuwa">
-    <img src="https://img.shields.io/badge/Abhi-Telegram-blue?style=for-the-badge&logo=telegram">
-  </a>
-  &nbsp;
-  <a href="https://github.com/LastPerson07/">
-    <img src="https://img.shields.io/badge/LastPerson07-GitHub-black?style=for-the-badge&logo=github">
-  </a>
-</p>
-
----
-
-# 📞 Support
-
-<p align="center">
-  <a href="https://t.me/cantarellabots">
-    <img src="https://img.shields.io/badge/cantarella-Official%20Channel-blue?style=for-the-badge&logo=telegram">
-  </a>
-  <br><br>
-  <a href="https://t.me/THEUPDATEDGUYS">
-    <img src="https://img.shields.io/badge/Updates-Channel-blue?style=for-the-badge&logo=telegram">
+  <a href="https://t.me/H4CK3R_OO7">
+    <img src="https://img.shields.io/badge/Admin%20Support-@H4CK3R__OO7-0088cc?style=for-the-badge&logo=telegram&logoColor=white">
   </a>
 </p>
 
 ---
 
 <p align="center">
-⭐ If this project helped you, consider starring the repository!
+  ⭐ <b>If you find this bot helpful, please star the repository!</b>
 </p>

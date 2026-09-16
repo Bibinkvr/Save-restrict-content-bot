@@ -1,13 +1,4 @@
-# ========================================================
-# cantarella
-# Don't Remove Credit 🥺
-# Telegram Channel @cantarellabots
-#
-# Maintained & Updated by:
-# Dhanpal Sharma
-# GitHub: https://github.com/LastPerson07
-# ========================================================
-
+# ContentSaver Bot Dockerfile
 FROM python:3.10.13-slim-bullseye
 
 # Prevent Python from creating .pyc files
@@ -30,15 +21,5 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy project files
 COPY . .
 
-# Start ONLY the bot
-# Flask keep_alive server handles port binding
+# Start the bot
 CMD ["python3", "bot.py"]
-
-# ========================================================
-# cantarella
-# Don't Remove Credit
-# Telegram Channel @cantarellabots
-#
-# Updated & Managed by:
-# Dhanpal Sharma | https://github.com/LastPerson07
-# ========================================================

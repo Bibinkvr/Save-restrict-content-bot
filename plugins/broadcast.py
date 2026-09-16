@@ -1,9 +1,3 @@
-# cantarella
-# Don't Remove Credit
-# Telegram Channel @cantarellabots
-
-
-
 from pyrogram.errors import InputUserDeactivated, UserNotParticipant, FloodWait, UserIsBlocked, PeerIdInvalid
 from database.db import db
 from pyrogram import Client, filters
@@ -81,9 +75,6 @@ async def broadcast_command(bot: Client, message: Message):
                 elif sh == "Error":
                     failed += 1
             done += 1
-# cantarella
-# Don't Remove Credit
-# Telegram Channel @cantarellabots
 
             if done % 20 == 0:
                 await sts.edit(
@@ -164,11 +155,3 @@ async def users_count(bot: Client, message: Message):
         await msg.edit_text(f"**__⚠️ Error Fetching User Data:__**\n<code>{e}</code>")
         logger.error(f"[!] /users error: {e}")
 
-
-# Credits
-# Developer Telegram: @cantarellabots
-# Update channel: @cantarellabots
-
-# cantarella
-# Don't Remove Credit
-# Telegram Channel @cantarellabots

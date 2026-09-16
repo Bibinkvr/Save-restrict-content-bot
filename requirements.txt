@@ -8,6 +8,7 @@ requests
 
 # --- Database & Utilities ---
 motor
+python-dotenv
 
 # --- Web Framework (Flask Stack) ---
 Flask==1.1.2

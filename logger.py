@@ -1,8 +1,5 @@
 """
-Logging Configuration
-
-Developed by: LastPerson07 × cantarella
-Telegram: @cantarellabots | @THEUPDATEDGUYS
+ContentSaver Logging Configuration
 """
 
 import logging
