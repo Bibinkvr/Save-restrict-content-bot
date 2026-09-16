@@ -581,13 +581,33 @@ async def button_callbacks(client: Client, callback_query: CallbackQuery):
         )
     elif data == "help_btn":
         buttons = [[InlineKeyboardButton("⬅️ Back to Home", callback_data="start_btn")]]
-        await client.edit_message_caption(
-            chat_id=message.chat.id,
-            message_id=message.id,
-            caption=script.HELP_TXT,
-            reply_markup=InlineKeyboardMarkup(buttons),
-            parse_mode=enums.ParseMode.HTML
-        )
+        try:
+            if len(script.HELP_TXT) > 1024 or not message.photo:
+                await message.delete()
+                await client.send_message(
+                    chat_id=message.chat.id,
+                    text=script.HELP_TXT,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                    parse_mode=enums.ParseMode.HTML,
+                    disable_web_page_preview=True
+                )
+            else:
+                await client.edit_message_caption(
+                    chat_id=message.chat.id,
+                    message_id=message.id,
+                    caption=script.HELP_TXT,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                    parse_mode=enums.ParseMode.HTML
+                )
+        except Exception:
+            await message.delete()
+            await client.send_message(
+                chat_id=message.chat.id,
+                text=script.HELP_TXT,
+                reply_markup=InlineKeyboardMarkup(buttons),
+                parse_mode=enums.ParseMode.HTML,
+                disable_web_page_preview=True
+            )
     elif data == "about_btn":
         buttons = [[InlineKeyboardButton("⬅️ Back to Home", callback_data="start_btn")]]
         await client.edit_message_caption(
@@ -609,15 +629,39 @@ async def button_callbacks(client: Client, callback_query: CallbackQuery):
                 InlineKeyboardButton("ℹ️ About Bot", callback_data="about_btn")
             ]
         ]
-        await client.edit_message_media(
-            chat_id=message.chat.id,
-            message_id=message.id,
-            media=InputMediaPhoto(
-                media=DEFAULT_BANNER,
-                caption=script.START_TXT.format(callback_query.from_user.mention, bot.username, bot.first_name)
-            ),
-            reply_markup=InlineKeyboardMarkup(buttons)
-        )
+        start_caption = script.START_TXT.format(callback_query.from_user.mention, bot.username, bot.first_name)
+        try:
+            if message.photo:
+                await client.edit_message_media(
+                    chat_id=message.chat.id,
+                    message_id=message.id,
+                    media=InputMediaPhoto(
+                        media=DEFAULT_BANNER,
+                        caption=start_caption
+                    ),
+                    reply_markup=InlineKeyboardMarkup(buttons)
+                )
+            else:
+                await message.delete()
+                await client.send_photo(
+                    chat_id=message.chat.id,
+                    photo=DEFAULT_BANNER,
+                    caption=start_caption,
+                    reply_markup=InlineKeyboardMarkup(buttons),
+                    parse_mode=enums.ParseMode.HTML
+                )
+        except Exception:
+            try:
+                await message.delete()
+            except Exception:
+                pass
+            await client.send_photo(
+                chat_id=message.chat.id,
+                photo=DEFAULT_BANNER,
+                caption=start_caption,
+                reply_markup=InlineKeyboardMarkup(buttons),
+                parse_mode=enums.ParseMode.HTML
+            )
     elif data == "close_btn":
         await message.delete()
     elif data in ["cmd_list_btn", "user_stats_btn", "dump_chat_btn", "thumb_btn", "caption_btn"]:
