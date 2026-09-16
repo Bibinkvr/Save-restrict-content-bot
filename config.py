@@ -56,8 +56,25 @@ LOG_CHANNEL = int(os.environ.get("LOG_CHANNEL", "0"))
 
 
 # ==============================
+# Banner / Graphics Configuration
+# ==============================
+
+# Can be a local file path (e.g. 'banner.png'), Telegram file_id, or custom image URL
+BANNER_IMAGE = os.environ.get("BANNER_IMAGE", "banner.png")
+
+
+# ==============================
+# File & Download Limits
+# ==============================
+
+# Free tier file size limit in bytes (Default: 2GB = 2097152000 bytes)
+FREE_LIMIT_SIZE = int(os.environ.get("FREE_LIMIT_SIZE", 2097152000))
+
+
+# ==============================
 # Error Handling
 # ==============================
 
 # Set to True to send error messages to users
 ERROR_MESSAGE = os.environ.get("ERROR_MESSAGE", "True").lower() == "true"
+

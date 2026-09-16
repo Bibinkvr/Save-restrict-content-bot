@@ -19,7 +19,7 @@ from pyrogram.types import (
     CallbackQuery,
     InputMediaPhoto
 )
-from config import API_ID, API_HASH, ADMINS, FSUB_CHANNEL
+from config import API_ID, API_HASH, ADMINS, FSUB_CHANNEL, FREE_LIMIT_SIZE, BANNER_IMAGE
 from database.db import db
 from plugins.strings import HELP_TXT, COMMANDS_TXT
 from logger import LOGGER
@@ -27,7 +27,7 @@ from logger import LOGGER
 logger = LOGGER(__name__)
 
 ADMIN_URL = "https://t.me/H4CK3R_OO7"
-DEFAULT_BANNER = "https://i.postimg.cc/5tB8b7DN/Chat-GPT-Image-Sep-16-2026-08-25-15-PM.png"
+DEFAULT_BANNER = BANNER_IMAGE
 
 REACTIONS = [
     "👍", "❤️", "🔥", "🥰", "👏", "😁", "🎉", "🤩", "⚡", "💯"
@@ -218,14 +218,26 @@ async def send_start(client: Client, message: Message):
     ]
     reply_markup = InlineKeyboardMarkup(buttons)
     bot = await client.get_me()
-    await client.send_photo(
-        chat_id=message.chat.id,
-        photo=DEFAULT_BANNER,
-        caption=script.START_TXT.format(message.from_user.mention, bot.username, bot.first_name),
-        reply_markup=reply_markup,
-        reply_to_message_id=message.id,
-        parse_mode=enums.ParseMode.HTML
-    )
+    start_caption = script.START_TXT.format(message.from_user.mention, bot.username, bot.first_name)
+    try:
+        await client.send_photo(
+            chat_id=message.chat.id,
+            photo=DEFAULT_BANNER,
+            caption=start_caption,
+            reply_markup=reply_markup,
+            reply_to_message_id=message.id,
+            parse_mode=enums.ParseMode.HTML
+        )
+    except Exception as e:
+        logger.warning(f"Could not send start banner photo ({e}), falling back to text message")
+        await client.send_message(
+            chat_id=message.chat.id,
+            text=start_caption,
+            reply_markup=reply_markup,
+            reply_to_message_id=message.id,
+            parse_mode=enums.ParseMode.HTML,
+            disable_web_page_preview=True
+        )
 
 @Client.on_message(filters.command(["help"]))
 async def send_help(client: Client, message: Message):
@@ -492,6 +504,8 @@ async def handle_restricted_content(client: Client, acc: Client, message: Messag
             base_caption = msg.caption if msg.caption else ""
 
         final_caption = apply_word_filters(base_caption, delete_words, replace_words)
+        if final_caption and len(final_caption) > 1024:
+            final_caption = final_caption[:1020] + "..."
 
         # Upload phase
         up_progress = ProgressTracker(client, smsg, "Uploading", user_id)

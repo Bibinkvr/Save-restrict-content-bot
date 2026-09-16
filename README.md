@@ -1,6 +1,10 @@
 # 🚀 ContentSaver Bot (Save Restricted Content)
 
 <p align="center">
+  <img src="banner.png" alt="ContentSaver Bot Banner" width="700">
+</p>
+
+<p align="center">
   <img src="https://img.shields.io/badge/Python-3.10+-3776AB?logo=python&logoColor=white&style=for-the-badge">
   <img src="https://img.shields.io/badge/Pyrogram-v2.0-26A5E4?logo=telegram&logoColor=white&style=for-the-badge">
   <img src="https://img.shields.io/badge/MongoDB-Atlas-47A248?logo=mongodb&logoColor=white&style=for-the-badge">

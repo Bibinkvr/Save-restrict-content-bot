@@ -1,7 +1,7 @@
 from pyrogram import Client, filters
 from pyrogram.types import Message
 from database.db import db
-from config import ADMINS
+from config import ADMINS, FSUB_CHANNELS
 
 @Client.on_message(filters.command("ban") & filters.user(ADMINS))
 async def ban(client: Client, message: Message):

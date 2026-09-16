@@ -16,13 +16,13 @@ from pyrogram.errors import (
     PeerIdInvalid,
     FloodWait
 )
-from config import ADMINS, FSUB_CHANNELS, FSUB_AUTO_APPROVE
+from config import ADMINS, FSUB_CHANNELS, FSUB_AUTO_APPROVE, BANNER_IMAGE
 from database.db import db
 from logger import LOGGER
 
 logger = LOGGER(__name__)
 
-DEFAULT_BANNER = "https://i.postimg.cc/5tB8b7DN/Chat-GPT-Image-Sep-16-2026-08-25-15-PM.png"
+DEFAULT_BANNER = BANNER_IMAGE
 
 # In-memory invite link cache to prevent FloodWait
 INVITE_CACHE = {}
